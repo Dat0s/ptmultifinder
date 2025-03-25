@@ -47,9 +47,10 @@ class PtMultiFinder:
         self.proxies   = {"http": args.proxy, "https": args.proxy}
         self.sources   = self._get_sources(args.source)
         self.domains   = self._get_domains(args.domains)
+        self.case_flag = 0 if self.args.case_sensitive else re.IGNORECASE
 
     def run(self, args):
-        ptprinthelper.ptprint("Testing domains:", "TITLE", not self.use_json, colortext=True)
+        ptprinthelper.ptprint("Positive targets:", "TITLE", not self.use_json, colortext=True)
 
         with ThreadPoolExecutor(max_workers=args.threads) as executor:
             future_to_domain = {executor.submit(self.check_domains, domain): domain for domain in self.domains}
@@ -126,11 +127,11 @@ class PtMultiFinder:
             if self.proxies and "burp" in response.text.lower():
                 return
 
-            if self.args.string_yes and any(string in response.text for string in self.args.string_yes):
-                ptprinthelper.ptprint(f"String-Yes: {url}", "TEXT", not self.use_json, colortext=True, flush=True, clear_to_eol=True)
+            if self.args.string_yes and any(re.search(string, response.text, self.case_flag) for string in self.args.string_yes):
+                ptprinthelper.ptprint(f"{url}", "TEXT", not self.use_json, colortext=True, flush=True, clear_to_eol=True)
 
-            if self.args.string_no and not all([self.args.string_no]) in response.text:
-                ptprinthelper.ptprint(f"String-No: {url}", "TEXT", not self.use_json, colortext=True, flush=True, clear_to_eol=True)
+            if self.args.string_no and not all(re.search(string, response.text, self.case_flag) for string in self.args.string_no):
+                ptprinthelper.ptprint(f"{url}", "TEXT", not self.use_json, colortext=True, flush=True, clear_to_eol=True)
 
             if not self.args.string_yes and not self.args.string_no:
                 ptprinthelper.ptprint(url, "TEXT", not self.use_json, colortext=True, flush=True, clear_to_eol=True)
@@ -175,6 +176,7 @@ def get_help():
             ["-sc",      "--status-code",  "<status-code>",                 "Specify status codes that will be accepted (default 200)"],
             ["-sy",      "--string-yes",   "<string>",                      "Show only results that contain the specified string in the response"],
             ["-sn",      "--string-no",    "<string>",                      "Show only results that do not contain the specific string in the response"],
+            ["-cs",      "--case-sensitive",    "",                         "Enable case sensitivity for -sy, -sn options"],
             ["-ch",      "--check",        "",                              "Skip domain if it responds with a status code of 200 to a non-existent resource."],
             ["-p",       "--proxy",        "<proxy>",                       "Set Proxy"],
             ["-a",       "--user-agent",   "<agent>",                       "Set User-Agent"],
@@ -201,6 +203,7 @@ def parse_args():
     parser.add_argument("-T",  "--timeout",     type=int, default=5)
     parser.add_argument("-p",  "--proxy",       type=str)
 
+    parser.add_argument("-cs", "--case_sensitive", action="store_true")
     parser.add_argument("-j",  "--json",        action="store_true")
     parser.add_argument("-ch", "--check",       action="store_true")
     parser.add_argument("-v",  "--version",     action="version", version=f"%(prog)s {__version__}")
