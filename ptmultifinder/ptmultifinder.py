@@ -139,7 +139,7 @@ class PtMultiFinder:
 
     def _get_sources(self, sources: List[str]):
         """Process sources (file to test)"""
-        if len(sources) == 1 and os.path.exists(sources[0]): # Process sources from file
+        if len(sources) == 1 and os.path.isfile(sources[0]): # Process sources from file
             with open(os.path.abspath(sources[0]), "r") as source_file:
                 return [line.strip() for line in source_file.readlines()]
         else: # Process sources from CLI
@@ -193,7 +193,7 @@ def get_help():
 def parse_args():
     parser = argparse.ArgumentParser(add_help=False, usage=f"{SCRIPTNAME} <options>")
     parser.add_argument("-d",  "--domains",     type=str, nargs="+", required=True)
-    parser.add_argument("-s",  "--source",      type=str, nargs="+", required=True)
+    parser.add_argument("-s",  "--source",      type=str, nargs="*", default=[""])
     parser.add_argument("-sc", "--status-code", type=int, nargs="*", default=[200])
     parser.add_argument("-sy", "--string-yes",  type=str, nargs="+")
     parser.add_argument("-sn", "--string-no",   type=str, nargs="+")
