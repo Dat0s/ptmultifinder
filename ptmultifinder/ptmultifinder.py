@@ -49,6 +49,9 @@ class PtMultiFinder:
         self.domains   = self._get_domains(args.domains)
         self.case_flag = 0 if self.args.case_sensitive else re.IGNORECASE
 
+        if len(self.domains) > 1 and self.use_json:
+            self.ptjsonlib.end_error(f"Cannot test more than 1 domain while --json parameter is present", self.use_json)
+
     def run(self, args):
         ptprinthelper.ptprint("Positive targets:", "TITLE", not self.use_json, colortext=True)
 
@@ -145,15 +148,6 @@ class PtMultiFinder:
         else: # Process sources from CLI
             return [source for source in sources]
 
-    def _get_domains(self, domain_file):
-        try:
-            domains = ptmisclib.read_file(domain_file)
-            if len(domains) > 1 and self.use_json:
-                self.ptjsonlib.end_error(f"Cannot test more than 1 domain while --json parameter is present", self.use_json)
-            return domains
-        except FileNotFoundError:
-            self.ptjsonlib.end_error(f"File '{domain_file}' not found", self.use_json)
-
     def _get_domains(self, domains: List[str]):
         """Process domains (from file or list)"""
         if len(domains) == 1 and os.path.exists(domains[0]): # Load domains from file
@@ -217,6 +211,10 @@ def parse_args():
         sys.exit(0)
 
     args = parser.parse_args()
+
+    if not args.source:
+        args.source = [""]
+
     ptprinthelper.print_banner(SCRIPTNAME, __version__, args.json, 0)
     return args
 
@@ -225,6 +223,7 @@ def main():
     global SCRIPTNAME
     SCRIPTNAME = "ptmultifinder"
     args = parse_args()
+    input((1, args.source))
     script = PtMultiFinder(args)
     # Suppress all warnings
     warnings.filterwarnings("ignore")
