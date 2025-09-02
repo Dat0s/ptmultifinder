@@ -27,37 +27,39 @@ source ~/.zshrc
 
 ## Usage examples
 ```
-ptmultifinder -f domains.txt -s sources.txt
-ptmultifinder -f domains.txt -s admin.php .git/ backup/
-ptmultifinder -f domains.txt -s sources.txt -ch -t 500 -sy admin
+ptmultifinder --domains domains.txt --sources sources.txt
+ptmultifinder --domains domains.txt --sources admin.php .git/ backup/
 ```
 
 ## Options
 ```
--f   --file         <file>          Specify file with list of domains to test
--s   --source       <source>        Specify file with list of sources to check for (index.php, admin/, .git/HEAD, .svn/entries)
--sc  --status-code  <status-code>   Specify status codes that will be accepted (default 200)
--sy  --string-yes   <string-yes>    Show domain only if it contains specified strings
--sn  --string-no    <string-no>     Show domain only if it does not contain specified strings
--ch  --check                        Skip domain if it responds with a status code of 200 to a non-existent resource.
--p   --proxy        <proxy>         Set proxy (e.g. http://127.0.0.1:8080)
--a   --user-agent   <agent>         Set User-Agent
--t   --threads      <threads>       Set threads count
--T   --timeout      <timeout>       Set timeout (default 5s)
--H   --headers      <header:value>  Set custom header(s)
--v   --version                      Show script version and exit
--h   --help                         Show this help message and exit
--j   --json                         Output in JSON format
+-d   --domains         <domains>       Domains or file with domains to test
+-s   --source          <source>        Sources or file with sources to check
+-sc  --status-code     <status-code>   Specify status codes that will be accepted (default 200)
+-sy  --string-yes      <string>        Show only results that contain the specified string in the response
+-sn  --string-no       <string>        Show only results that do not contain the specific string in the response
+-cs  --case-sensitive                  Enable case sensitivity for -sy, -sn options
+-ch  --check                           Skip domain if it responds with a status code of 200 to a non-existent resource.
+-p   --proxy           <proxy>         Set Proxy
+-a   --user-agent      <agent>         Set User-Agent
+-t   --threads         <threads>       Set Threads count
+-T   --timeout         <timeout>       Set Timeout (default 5s)
+-H   --headers         <header:value>  Set custom headers
+-v   --version                         Show script version and exit
+-h   --help                            Show this help message and exit
+-j   --json                            Output in JSON format
 ```
 
 ## Dependencies
 ```
 ptlibs
+bs4
+lxml
 ```
 
 ## License
 
-Copyright (c) 2024 Penterep Security s.r.o.
+Copyright (c) 2025 Penterep Security s.r.o.
 
 ptmultifinder is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
