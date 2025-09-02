@@ -223,7 +223,6 @@ def main():
     global SCRIPTNAME
     SCRIPTNAME = "ptmultifinder"
     args = parse_args()
-    input((1, args.source))
     script = PtMultiFinder(args)
     # Suppress all warnings
     warnings.filterwarnings("ignore")
