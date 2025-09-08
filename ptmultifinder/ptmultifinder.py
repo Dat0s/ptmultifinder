@@ -70,8 +70,9 @@ class PtMultiFinder:
         if self.args.check:
             if self._check_status_of_non_existing_resource(url):
                 return
+
         for file_path in self.sources:
-            full_url = f"{url}/{file_path}"
+            full_url = f"{url}/{file_path}" if file_path else url
             ptprinthelper.ptprint(f"{full_url}", "ADDITIONS", not self.use_json, end="\r", flush=True, colortext=True, clear_to_eol=True) # Current tested URL
             self._test_url_and_handle_redirects(full_url)
 
