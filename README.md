@@ -35,11 +35,16 @@ ptmultifinder --domains domains.txt --sources admin.php .git/ backup/
 ```
 -d   --domains         <domains>       Domains or file with domains to test
 -s   --source          <source>        Sources or file with sources to check
--sc  --status-code     <status-code>   Specify status codes that will be accepted (default 200)
+-sc  --status-code     <status-code>   Process only servers that respond with provided status codes (default 200)
 -sy  --string-yes      <string>        Show only results that contain the specified string in the response
 -sn  --string-no       <string>        Show only results that do not contain the specific string in the response
 -cs  --case-sensitive                  Enable case sensitivity for -sy, -sn options
 -ch  --check                           Skip domain if it responds with a status code of 200 to a non-existent resource.
+-C   --cache                           Enable caching of requests
+-r   --redirects                       Follow redirects
+-mr  --max-retries                     Set the number of retries on network connection failure. (default 0)
+-ws  --without-scheme                  Output findings without scheme
+-wp  --without-path                    Output findings without path
 -p   --proxy           <proxy>         Set Proxy
 -a   --user-agent      <agent>         Set User-Agent
 -t   --threads         <threads>       Set Threads count
@@ -73,4 +78,5 @@ You are only allowed to run the tool against the websites which
 you have been given permission to pentest. We do not accept any
 responsibility for any damage/harm that this application causes to your
 computer, or your network. Penterep is not responsible for any illegal
+
 or malicious use of this code. Be Ethical!
